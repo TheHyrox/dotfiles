@@ -32,10 +32,10 @@ pacstrap /mnt base linux linux-firmware nano
 genfstab -U /mnt >> /mnt/etc/fstab
 
 #Set mirrorlist
-reflector --country France --age 12 --protocol https -- sort rate --save /etc/pacman.d/mirrorlist
+reflector --country France --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 
 # Chroot into new system and configure it
-arch-chroot /mnt /bin/bash <<EOF
+arch-chroot /mnt 
 
 ln -sf /usr/share/zoneinfo/Europe/Paris /etc/localtime
 hwclock --systohc
@@ -55,6 +55,7 @@ grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
 grub-mkconfig -o /boot/grub/grub.cfg
 EOF
 
+touch /etc/systemd/network/20-wired.network
 cat "[Match]" >> /etc/systemd/network/20-wired.network
 cat "Name=enp0s1" >> etc/systemd/network/20-wired.network
 cat  "" >> etc/systemd/network/20-wired.network
@@ -65,6 +66,8 @@ systemctl enable systemd-networkd
 systemctl enable systemd-resolved
 
 ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
+
+localectl set-keymap --no-convert mac-fr
 
 # Unmount and reboot
 umount -R /mnt

@@ -8,11 +8,11 @@ PASSWORD="root"
 
 # Partitioning (BIOS + MBR example, change for UEFI)
 echo "Creating partitions..."
-parted /dev/sda mklabel gpt
-parted /dev/sda mkpart primary 1MiB 512MiB
-parted /dev/sda set 1 boot on
-parted /dev/sda mkpart primary linux-swap 512MiB 2GiB
-parted /dev/sda mkpart primary ext4 2GiB 100%
+parted ${DISK} mklabel gpt
+parted ${DISK} mkpart primary 1MiB 512MiB
+parted ${DISK} set 1 boot on
+parted ${DISK} mkpart primary linux-swap 512MiB 2GiB
+parted ${DISK} mkpart primary ext4 2GiB 100%
 
 # Formatting
 mkfs.fat -F32 ${DISK}1

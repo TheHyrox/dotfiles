@@ -26,7 +26,7 @@ mkdir /mnt/boot
 mount ${DISK}1 /mnt/boot
 
 # Install base system
-pacstrap /mnt base linux linux-firmware nano
+pacstrap /mnt base linux linux-firmware
 
 # Generate fstab
 genfstab -U /mnt >> /mnt/etc/fstab
@@ -40,7 +40,6 @@ arch-chroot /mnt
 ln -sf /usr/share/zoneinfo/Europe/Paris /etc/localtime
 hwclock --systohc
 
-
 echo "archyrox" | sudo tee /etc/hostname
 sh -c 'echo "127.0.0.1  localhost" > /etc/hosts'
 sh -c 'echo "127.0.1.1   archyrox" >> /etc/hosts'
@@ -50,7 +49,7 @@ echo "root:$PASSWORD" | chpasswd
 mkinitcpio -P
 
 # Bootloader
-pacman -Sy --noconfirm grub
+pacman -Sy --noconfirm grub efibootmgr nano reflector
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
 grub-mkconfig -o /boot/grub/grub.cfg
 EOF

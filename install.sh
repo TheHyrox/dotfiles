@@ -35,7 +35,7 @@ genfstab -U /mnt >> /mnt/etc/fstab
 reflector --country France --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist
 
 # Chroot into new system and configure it
-arch-chroot /mnt 
+arch-chroot /mnt <<EOF
 
 ln -sf /usr/share/zoneinfo/Europe/Paris /etc/localtime
 hwclock --systohc
@@ -52,7 +52,7 @@ mkinitcpio -P
 pacman -Sy --noconfirm grub efibootmgr nano reflector
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
 grub-mkconfig -o /boot/grub/grub.cfg
-EOF
+
 
 touch /etc/systemd/network/20-wired.network
 cat "[Match]" >> /etc/systemd/network/20-wired.network
@@ -67,7 +67,7 @@ systemctl enable systemd-resolved
 ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
 
 localectl set-keymap --no-convert mac-fr
-
+EOF
 # Unmount and reboot
 umount -R /mnt
 swapoff -a
